@@ -63,12 +63,6 @@ class MainApp(MDApp):
         screen = Builder.load_file("windowsmd.kv")
         self.theme_cls.theme_style = "Dark"
         Clock.schedule_once(self.ClassThatDoesEverything, 1)
-        # if self.get_permission:
-        #     print("Rechte wurden erteilt!")
-            # try:
-            #     self.centerMap(self.gps_latitude,self.gps_longitude)
-            # except:
-            #     print(f"Fehler Werte kaputt oder anderweitiger fehler. Latitude: {self.gps_latitude},Longitude: {self.gps_longitude}")
         return screen
     
     #region GPS
@@ -153,11 +147,12 @@ class MainApp(MDApp):
         if platform == 'win':
             self.marker_boat.lat = 48.4715279
             self.marker_boat.lon = 7.9512879
+            self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
             if hasattr(self,'marker_boat'):
                 self.marker_boat.lat = self.gps_latitude
                 self.marker_boat.lon = self.gps_longitude
-        self.root.ids.mapview.trigger_update('full')
+                self.root.ids.mapview.trigger_update('full')
 
     def DrawCircle(self):
         self.offcenter = 21
