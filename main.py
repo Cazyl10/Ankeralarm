@@ -117,6 +117,7 @@ class MainApp(MDApp):
                     self.CenterMap(self.gps_latitude, self.gps_longitude)
                     self.useOnce = False
             self.UpdateBoat()
+        print("ICH BIN IN ON LOCAAAAAAAAAAAAAAAAAAAAATIONNNNNNNNNNNNNNNNNNNNNN")
     #endregion
     
     def ToggleProgram(self):
