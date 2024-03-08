@@ -362,32 +362,40 @@ class MainApp(MDApp):
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
                         
-    def AddBoatMarker(self):
+    def AddBoatMarker(self, lat, lon):
         if platform == 'win':
             lat = 50.0
             lon = 8.0
         elif platform == 'android':
-            lat = self.gps_latitude
-            lon = self.gps_longitude
+            try:
+                lat = self.gps_latitude
+                lon = self.gps_longitude
+            except AttributeError:
+                print("Excepton in AddBoatMarker")
+                lat = 50.0
+                lon = 8.0
 
         if not self.BoatExist():
             self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
             self.root.ids.mapview.add_widget(self.marker_boat)
             
     def ClassThatDoesEverything(self, dt):
-        while 1:
-            if platform == 'win':
+        # while 1:
+        if platform == 'win':
+            lat = 50.0
+            lon = 8.0
+            # break
+        elif platform == 'android':
+            try:
+                lat = self.gps_latitude
+                lon = self.gps_longitude
+                # break
+            except AttributeError:
+                print("Exception in ClassThatDoes")
                 lat = 50.0
                 lon = 8.0
-                break
-            elif platform == 'android':
-                try:
-                    lat = self.gps_latitude
-                    lon = self.gps_longitude
-                    break
-                except AttributeError:
-                    print("Exception in ClassThatDoes")
-        self.AddBoatMarker()
+
+        self.AddBoatMarker(lat, lon)
         self.CenterMap(lat, lon)
         self.root.ids.mapview.trigger_update('full')
 
