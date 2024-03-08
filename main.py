@@ -149,14 +149,20 @@ class MainApp(MDApp):
             self.marker_boat.lon = 7.9512879
             self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
-            if hasattr(self,'marker_boat'):
+            if self.BoatExist():
                 self.marker_boat.lat = self.gps_latitude
                 self.marker_boat.lon = self.gps_longitude
                 self.root.ids.mapview.trigger_update('full')
 
+
+    def BoatExist(self):
+        if hasattr(self,'marker_boat'):
+            return True
+        else:
+            return False
+        
     def DrawCircle(self):
         self.offcenter = 21
-
         if platform == 'win':
             # lat = 48.4715279
             # lon = 7.9512879
@@ -361,7 +367,7 @@ class MainApp(MDApp):
             lat = self.gps_latitude
             lon = self.gps_longitude
 
-        if not hasattr(self, 'marker_boat'):
+        if not self.BoatExist():
             self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
             self.root.ids.mapview.add_widget(self.marker_boat)
             
