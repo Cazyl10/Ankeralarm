@@ -23,7 +23,6 @@ from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivy.storage.jsonstore import JsonStore
 from os.path import join
 
-
 class MyToggleButton(MDFlatButton, MDToggleButton):
     pass
 
