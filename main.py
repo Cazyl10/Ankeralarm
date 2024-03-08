@@ -151,8 +151,10 @@ class MainApp(MDApp):
             self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
             if self.BoatExist():
+                print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
                 self.marker_boat.lat = self.gps_latitude
                 self.marker_boat.lon = self.gps_longitude
+                print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
                 self.root.ids.mapview.trigger_update('full')
 
 
