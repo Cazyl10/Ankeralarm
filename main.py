@@ -351,9 +351,9 @@ class MainApp(MDApp):
                 data = json.load(json_file)
         elif platform == 'win':
             data_dir = "src/json/daten.json"
-
-        # f = open(data_dir)
-        # data = json.load(f)
+            f = open(data_dir)
+            data = json.load(f)
+            
         self.root.ids.radius.text = data['Radius']
         self.root.ids.sound_spinner.text = data['Audio Data']
         # f.close()
