@@ -60,6 +60,7 @@ class MainApp(MDApp):
     
     def build(self):
         screen = Builder.load_file("windowsmd.kv")
+        self.theme_cls.theme_style = "Dark"
         Clock.schedule_once(self.ClassThatDoesEverything, 1)
         # if self.get_permission:
         #     print("Rechte wurden erteilt!")
@@ -113,28 +114,16 @@ class MainApp(MDApp):
     def on_location(self, **kwargs):
         self.gps_latitude = kwargs.get('lat', None) 
         self.gps_longitude = kwargs.get('lon', None)
-
-        if self.useOnce:
-            if hasattr(self,'gps_latitude') and hasattr(self,'gps_longitude'):
+        if hasattr(self,'gps_latitude') and hasattr(self,'gps_longitude'):
+            if self.useOnce:
                 if  self.root.ids.mapview.lat and self.root.ids.mapview.lon:
                     self.root.ids.mapview.lat = self.gps_latitude
                     self.root.ids.mapview.lon = self.gps_longitude
                     self.CenterMap(self.gps_latitude, self.gps_longitude)
                     self.useOnce = False
-    
+            self.UpdateBoat()
     #endregion
     
-    # def set_map_source(self):
-    #     my_map_source = MapSource(
-    #         url='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    #         min_zoom=16,
-    #         max_zoom=19,
-    #         attribution='Map data  © OpenStreetMap contributors'
-    #     )
-    #     self.mapview.map_source = my_map_source
-    #     self.CenterMap(self.gps_latitude, self.gps_longitude, 16)
-    #     print("SETTET MAP SOURCE LAN BRO ASDKLHAKLJHFELKJHFLKJHEFKLJSDLKFJHSLDKFLSKDJFKSDLJFFFFFFFFSKLDJHFKLJSDHFLKJSHDFKJSHD")
-
     def ToggleProgram(self):
         """Startet oder stoppt das Programm."""
         if self.isProgramStopped:
@@ -164,8 +153,9 @@ class MainApp(MDApp):
             self.marker_boat.lat = 48.4715279
             self.marker_boat.lon = 7.9512879
         elif platform == 'android':
-            self.marker_boat.lat = self.gps_latitude
-            self.marker_boat.lon = self.gps_longitude
+            if hasattr(self,'marker_boat'):
+                self.marker_boat.lat = self.gps_latitude
+                self.marker_boat.lon = self.gps_longitude
         self.root.ids.mapview.trigger_update('full')
 
     def DrawCircle(self):
@@ -322,9 +312,11 @@ class MainApp(MDApp):
     def WriteToFile(self):
         self.radius_widget = self.root.ids.radius.text
         self.spinner_widget = self.root.ids.sound_spinner.text
-        
+
         if platform == 'android':
-            # data_dir = MainApp().user_data_dir
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
+            #data_dir = MainApp().user_data_dir
             dictionary = {
             "Bereich": "Einstellungen",
             "Radius": self.radius_widget,
@@ -345,15 +337,17 @@ class MainApp(MDApp):
 
     def LoadSettings(self):
         if platform == 'android':
-            # data_dir = MainApp().user_data_dir + "/daten.json"
-            json_file_path = Path('/src/json/daten.json')
-            with json_file_path.open() as json_file:
-                data = json.load(json_file)
-        elif platform == 'win':
-            data_dir = "src/json/daten.json"
-            f = open(data_dir)
-            data = json.load(f)
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
             
+            #data_dir = MainApp().user_data_dir + "/daten.json"
+        elif platform == 'win':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
+            #data_dir = "src/json/daten.json"
+
+        f = open(data_dir)
+        data = json.load(f)
         self.root.ids.radius.text = data['Radius']
         self.root.ids.sound_spinner.text = data['Audio Data']
         # f.close()
@@ -365,7 +359,7 @@ class MainApp(MDApp):
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
                         
-    def AddBoatMarker(self):
+    def AddBoatMarker(self,lat,lon):
         if platform == 'win':
             lat = 50.0
             lon = 8.0
@@ -378,19 +372,20 @@ class MainApp(MDApp):
             self.root.ids.mapview.add_widget(self.marker_boat)
             
     def ClassThatDoesEverything(self, dt):
-        while 1:
-            if platform == 'win':
+    
+        if platform == 'win':
+            lat = 50.0
+            lon = 8.0
+        elif platform == 'android':
+            try:
+                lat = self.gps_latitude
+                lon = self.gps_longitude
+            except AttributeError:
+                print("Exception in ClassThatDoes")
                 lat = 50.0
                 lon = 8.0
-                break
-            elif platform == 'android':
-                try:
-                    lat = self.gps_latitude
-                    lon = self.gps_longitude
-                    break
-                except AttributeError:
-                    print("Exception in ClassThatDoes")
-        self.AddBoatMarker()
+
+        self.AddBoatMarker(lat, lon)
         self.CenterMap(lat, lon)
         self.root.ids.mapview.trigger_update('full')
 
