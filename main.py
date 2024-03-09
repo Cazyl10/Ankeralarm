@@ -23,6 +23,7 @@ from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivy.storage.jsonstore import JsonStore
 from os.path import join
 
+
 class MyToggleButton(MDFlatButton, MDToggleButton):
     pass
 
@@ -62,12 +63,6 @@ class MainApp(MDApp):
         screen = Builder.load_file("windowsmd.kv")
         self.theme_cls.theme_style = "Dark"
         Clock.schedule_once(self.ClassThatDoesEverything, 1)
-        # if self.get_permission:
-        #     print("Rechte wurden erteilt!")
-            # try:
-            #     self.centerMap(self.gps_latitude,self.gps_longitude)
-            # except:
-            #     print(f"Fehler Werte kaputt oder anderweitiger fehler. Latitude: {self.gps_latitude},Longitude: {self.gps_longitude}")
         return screen
     
     #region GPS
@@ -122,6 +117,7 @@ class MainApp(MDApp):
                     self.CenterMap(self.gps_latitude, self.gps_longitude)
                     self.useOnce = False
             self.UpdateBoat()
+        print("ICH BIN IN ON LOCAAAAAAAAAAAAAAAAAAAAATIONNNNNNNNNNNNNNNNNNNNNN")
     #endregion
     
     def ToggleProgram(self):
@@ -152,15 +148,24 @@ class MainApp(MDApp):
         if platform == 'win':
             self.marker_boat.lat = 48.4715279
             self.marker_boat.lon = 7.9512879
+            self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
-            if hasattr(self,'marker_boat'):
+            if self.BoatExist():
+                print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
                 self.marker_boat.lat = self.gps_latitude
                 self.marker_boat.lon = self.gps_longitude
-        self.root.ids.mapview.trigger_update('full')
+                print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
+                self.root.ids.mapview.trigger_update('full')
 
+
+    def BoatExist(self):
+        if hasattr(self,'marker_boat'):
+            return True
+        else:
+            return False
+        
     def DrawCircle(self):
         self.offcenter = 21
-
         if platform == 'win':
             # lat = 48.4715279
             # lon = 7.9512879
@@ -322,10 +327,8 @@ class MainApp(MDApp):
             "Radius": self.radius_widget,
             'Audio Data': self.spinner_widget
             }
-            json_file_path = Path('src/json/datan.json')
-            json_file_path.write_text(dictionary)
-            # with open (data_dir, "w") as file:
-            #     json.dump(dictionary,file)
+            with open (data_dir, "w") as file:
+                json.dump(dictionary,file)
         elif platform == 'win':
             dictionary = {
             "Bereich": "Einstellungen",
@@ -350,7 +353,7 @@ class MainApp(MDApp):
         data = json.load(f)
         self.root.ids.radius.text = data['Radius']
         self.root.ids.sound_spinner.text = data['Audio Data']
-        # f.close()
+        f.close()
 
     def PlaySound(self):
         wahlsound = self.root.ids.sound_spinner.text
@@ -359,20 +362,7 @@ class MainApp(MDApp):
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
                         
-    def AddBoatMarker(self,lat,lon):
-        if platform == 'win':
-            lat = 50.0
-            lon = 8.0
-        elif platform == 'android':
-            lat = self.gps_latitude
-            lon = self.gps_longitude
-
-        if not hasattr(self, 'marker_boat'):
-            self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
-            self.root.ids.mapview.add_widget(self.marker_boat)
-            
-    def ClassThatDoesEverything(self, dt):
-    
+    def AddBoatMarker(self, lat, lon):
         if platform == 'win':
             lat = 50.0
             lon = 8.0
@@ -380,6 +370,26 @@ class MainApp(MDApp):
             try:
                 lat = self.gps_latitude
                 lon = self.gps_longitude
+            except AttributeError:
+                print("Excepton in AddBoatMarker")
+                lat = 50.0
+                lon = 8.0
+
+        if not self.BoatExist():
+            self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
+            self.root.ids.mapview.add_widget(self.marker_boat)
+            
+    def ClassThatDoesEverything(self, dt):
+        # while 1:
+        if platform == 'win':
+            lat = 50.0
+            lon = 8.0
+            # break
+        elif platform == 'android':
+            try:
+                lat = self.gps_latitude
+                lon = self.gps_longitude
+                # break
             except AttributeError:
                 print("Exception in ClassThatDoes")
                 lat = 50.0
