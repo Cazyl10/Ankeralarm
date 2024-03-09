@@ -27,7 +27,8 @@ MDScreenManager:
                 MDIconButton:
                     id: info_button
                     icon: "information"
-                    md_bg_color: "#5780FF"
+                    rounded_button: True
+                    md_bg_color: "#F0544F"
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "info"
@@ -37,13 +38,19 @@ MDScreenManager:
                     text: "Ankeralarm"
                     halign: "center"
                     valign: "top"
-                    md_bg_color: "#5780FF"
+                    font_style: "H1"
+                    theme_text_color: "Custom"
+                    text_color: 1,1,1,1
+                    # md_bg_color: "#5780FF"
                     text_size: root.width, root.height
                     font_size: 32
 
                 MDIconButton:
                     icon: "file-settings"
-                    md_bg_color: "#5780FF"
+                    md_bg_color: "#F0544F"
+                    icon_color: .198, .216, .211, 1
+                    # theme_text_color: "Custom"
+                    # icon_size: "32sp"
                     on_press: app.StopUpdateCircle()
                     on_release:
                         root.current_heroes = ["hero"]
@@ -66,10 +73,12 @@ MDScreenManager:
                 MDFlatButton:
                     id: launchButton
                     text: "Start"
-                    md_bg_color: "#5780FF"
+                    md_bg_color: "#D81E5B"
                     size_hint_x: 1
                     size_hint_y: 1
                     halign: "center"
+                    font_size: "48sp"
+                    text_color: 1,1,1,1
                     on_press: 
                         app.ToggleProgram()
                 
@@ -78,54 +87,62 @@ MDScreenManager:
                     rows: 3
 
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         disabled: True
                         opacity: 0.0
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         id: up
+                        icon_size: "32sp"
+                        icon: "arrow-up"
                         on_press: app.MoveAnchor('up')
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         disabled: True
                         opacity: 0.0
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         id: left
+                        icon_size: "32sp"
+                        icon: "arrow-left"
                         on_press: app.MoveAnchor('left')
                     MDIconButton:
-                        md_bg_color: "#FFFFFF"
+                        md_bg_color: "#FDF0D5"
                         size_hint_x: 1
                         size_hint_y: 1
                         on_press: app.CenterMapButton()
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         id: right
+                        icon_size: "32sp"
+                        icon: "arrow-right"
                         on_press: app.MoveAnchor('right')
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         disabled: True
                         opacity: 0.0
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         id: down
+                        icon_size: "32sp"
+                        icon: "arrow-down"
                         on_press: app.MoveAnchor('down')
                     MDIconButton:
-                        md_bg_color: "#5780FF"
+                        md_bg_color: "#F0544F"
                         size_hint_x: 1
                         size_hint_y: 1
                         disabled: True
@@ -232,6 +249,7 @@ MDScreenManager:
                 
     MDScreen:
         name: "info"
+        md_bg_color: "#000000"
         hero_to: hero_to_info
 
         MDHeroTo:
@@ -250,16 +268,20 @@ MDScreenManager:
             MDGridLayout:
                 cols: 1
                 rows: 2
-                size_hint_y: 0.2
+                size_hint_y: 0.7
 
                 MDLabel:
-                    #color: 1,1,1,1
+                    text_color: 1,1,1,1
+                    font_style: "H4"
+                    theme_text_color: "Custom"
                     text: "Ersteller: Daniel, Florian, Katja"
                     valign: 'center'
                     halign: 'center'
 
                 MDLabel:
-                    #color:1,1,1,1
+                    text_color: 1,1,1,1
+                    font_style: "H5"
+                    theme_text_color: "Custom"
                     text: "App-Version: 1.0"
                     valign: 'center'
                     halign: 'center'
@@ -267,10 +289,15 @@ MDScreenManager:
             MDGridLayout:
                 cols: 1
                 rows: 1
-                size_hint_y: 0.5
+                size_hint_y: 0.3
+                padding: [20,20]
 
-                Button:
+                MDFlatButton:
                     text: "Zurück"
+                    md_bg_color: "#D81E5B"
+                    font_size: "32sp"
+                    size_hint_y: 1
+                    size_hint_x: 1
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main" 
