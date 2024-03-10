@@ -54,6 +54,7 @@ class MainApp(MDApp):
         self.dialog = None
         self.isProgramStopped = True
         self.useOnce = True
+        self.isAnchorVisible = True
         Clock.schedule_once(self.get_permission, 0)
         os.environ["SDL_AUDIODRIVER"] = "android"
     
@@ -226,12 +227,19 @@ class MainApp(MDApp):
     def UpdateCircle(self, *args):
         """Aktualisiere den Kreis auf dem Canvas"""
         self.CalculateDistance()
-        self.line.circle = self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter
+
+        if self.isAnchorVisible:
+            self.line.circle = self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter
+        else:
+            self.line.circle = 0, 0, 0
         self.UpdateBoat()
         # self.IsInsideCircle(self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter, self.marker_boat.pos[0], self.marker_boat.pos[1])
+        
+        # hole aktuelle Marker Positionen und prüfen, ob Boot innerhalb des Radius ist
         currAnchorPos = self.GetCurrentAnchorLocation()
         currBoatPos = self.GetCurrentBoatLocation()
         self.IsInsideCircle(currAnchorPos[0], currAnchorPos[1], int(self.root.ids.radius.text)*self.pixel_per_meter, currBoatPos[0], currBoatPos[1])
+        
         self.CheckIfMarkerOutOfScreen()
 
     def GetCurrentAnchorLocation(self):
@@ -405,14 +413,17 @@ class MainApp(MDApp):
         self.CenterMap(lat, lon)
         self.root.ids.mapview.trigger_update('full')
 
+    # Prüfen, ob Anker innhalb des Mapview Frames ist um Radius auszublenden
     def CheckIfMarkerOutOfScreen(self):
         bbox = self.root.ids.mapview.get_bbox()
         
         # Prüfen, ob Anker innerhalb der Boxgrenzen ist
-        if bbox[0] <= self.marker_anchor.lon <= bbox[2] and bbox[1] <= self.marker_anchor.lat <= bbox[3]:
+        if bbox[0] <= self.marker_anchor.lat <= bbox[2] and bbox[1] <= self.marker_anchor.lon <= bbox[3]:
             print("Marker is within the frame of the map view.")
+            self.isAnchorVisible = True
         else:
             print("Marker is not within the frame of the map view.")
+            self.isAnchorVisible = False
         
 if __name__ == "__main__":
     MainApp().run()
