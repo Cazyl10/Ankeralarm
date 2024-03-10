@@ -18,8 +18,6 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy_garden.mapview import MapMarker, MapMarkerPopup
 from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
-# from kivy.uix.filechooser import FileChooserListView
-# from kivy.uix.popup import Popup
 from kivy.storage.jsonstore import JsonStore
 from os.path import join
 
@@ -146,8 +144,8 @@ class MainApp(MDApp):
     def UpdateBoat(self):
         """Aktualisiert den aktuellen Standort."""
         if platform == 'win':
-            self.marker_boat.lat = 48.4715279
-            self.marker_boat.lon = 7.9512879
+            self.marker_boat.lat = 50.0
+            self.marker_boat.lon = 8.0
             self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
             if self.BoatExist():
@@ -167,8 +165,6 @@ class MainApp(MDApp):
     def DrawCircle(self):
         self.offcenter = 21
         if platform == 'win':
-            # lat = 48.4715279
-            # lon = 7.9512879
             lat = 50.0
             lon = 8.0
         elif platform == 'android':
@@ -232,8 +228,18 @@ class MainApp(MDApp):
         self.CalculateDistance()
         self.line.circle = self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter
         self.UpdateBoat()
-        self.IsInsideCircle(self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter, self.marker_boat.pos[0], self.marker_boat.pos[1])
-         
+        # self.IsInsideCircle(self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter, self.marker_boat.pos[0], self.marker_boat.pos[1])
+        currAnchorPos = self.GetCurrentAnchorLocation()
+        currBoatPos = self.GetCurrentBoatLocation()
+        self.IsInsideCircle(currAnchorPos[0], currAnchorPos[1], int(self.root.ids.radius.text)*self.pixel_per_meter, currBoatPos[0], currBoatPos[1])
+        self.CheckIfMarkerOutOfScreen()
+
+    def GetCurrentAnchorLocation(self):
+        return self.root.ids.mapview.get_window_xy_from(self.marker_anchor.lat, self.marker_anchor.lon, self.root.ids.mapview.zoom)
+    
+    def GetCurrentBoatLocation(self):
+        return self.root.ids.mapview.get_window_xy_from(self.marker_boat.lat, self.marker_boat.lon, self.root.ids.mapview.zoom)
+    
     # check if point is inside circle
     def IsInsideCircle(self, circle_x, circle_y, rad, x, y, *args):
         if ((x - circle_x) * (x - circle_x) + (y - circle_y) * (y - circle_y) <= rad * rad):
@@ -399,6 +405,14 @@ class MainApp(MDApp):
         self.CenterMap(lat, lon)
         self.root.ids.mapview.trigger_update('full')
 
+    def CheckIfMarkerOutOfScreen(self):
+        bbox = self.root.ids.mapview.get_bbox()
+        
+        # Prüfen, ob Anker innerhalb der Boxgrenzen ist
+        if bbox[0] <= self.marker_anchor.lon <= bbox[2] and bbox[1] <= self.marker_anchor.lat <= bbox[3]:
+            print("Marker is within the frame of the map view.")
+        else:
+            print("Marker is not within the frame of the map view.")
         
 if __name__ == "__main__":
     MainApp().run()
