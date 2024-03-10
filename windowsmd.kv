@@ -43,7 +43,7 @@ MDScreenManager:
                     text_color: 1,1,1,1
                     # md_bg_color: "#5780FF"
                     text_size: root.width, root.height
-                    font_size: 32
+                    font_size: "32sp"
 
                 MDIconButton:
                     icon: "file-settings"
@@ -51,7 +51,8 @@ MDScreenManager:
                     icon_color: .198, .216, .211, 1
                     # theme_text_color: "Custom"
                     # icon_size: "32sp"
-                    on_press: app.StopUpdateCircle()
+                    on_press: 
+                        app.StopUpdateCircle()
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "settings"
@@ -115,9 +116,12 @@ MDScreenManager:
                         icon: "arrow-left"
                         on_press: app.MoveAnchor('left')
                     MDIconButton:
-                        md_bg_color: "#FDF0D5"
+                        md_bg_color: "#3A3335"
                         size_hint_x: 1
                         size_hint_y: 1
+                        icon_size: "32sp"
+                        icon: "rotate-right"
+                        text_color: 0,0,0,0
                         on_press: app.CenterMapButton()
                     MDIconButton:
                         md_bg_color: "#F0544F"
@@ -172,19 +176,18 @@ MDScreenManager:
 
                 MDIconButton:
                     icon:"arrow-left"
-                    md_bg_color: "#8470ff"
+                    md_bg_color: "#F0544F"
                     size_hint:0.1,0.1
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main"
                         app.DrawCircle()
-
                 MDLabel:
                     text: "Einstellungen"
                     halign: "center"
                     valign: "top"
-                    md_bg_color: "#8470ff"
-                    font_size: 32
+                    # md_bg_color: "#8470ff"
+                    font_size: "32sp"
                     size_hint: 1, 1
 
             MDGridLayout:
@@ -196,13 +199,15 @@ MDScreenManager:
                 MDTextField:
                     id: radius
                     mode: "fill"
-                    hint_text: "in Meter"
+                    hint_text: "Radius in Meter"
                     # helper_text: "Bitte den Radius in Meter eingeben"
                     helper_text_mode: "persistent"
+                    md_bg_color: "#D81E5B"
                     halign:"center"
                     text: "200"
+                    text_color: 1,1,1,1
                     required: True
-                    font_size: 38
+                    font_size: "32sp"
                     input_filter: 'int'
                     size_hint: 1, 1
                     on_text: app.WriteToFile()
@@ -210,6 +215,7 @@ MDScreenManager:
                 MDIconButton:
                     icon: "plus"
                     valign: "center"
+                    md_bg_color: "#D81E5B"
                     size_hint: 1, 1
                     on_press: app.IncreaseRadius()
                     on_release: app.WriteToFile()
@@ -217,6 +223,7 @@ MDScreenManager:
                 MDIconButton:
                     icon: "minus"
                     valign: "center"
+                    md_bg_color: "#D81E5B"
                     size_hint: 1, 1
                     on_press: app.DecreaseRadius()
                     on_release: app.WriteToFile()                        
@@ -235,6 +242,8 @@ MDScreenManager:
 
                 Spinner:
                     id: sound_spinner
+                    background_color: '#D81E5B'
+                    text_color: 1,1,1,1
                     text: 'Alarm1'
                     values: ('Alarm1', 'Alarm2', 'Alarm3')
                     on_text: app.WriteToFile()
@@ -300,7 +309,7 @@ MDScreenManager:
                     size_hint_x: 1
                     on_release:
                         root.current_heroes = ["hero"]
-                        root.current = "main" 
+                        root.current = "main"
                         app.DrawCircle()
     
 

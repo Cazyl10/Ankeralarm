@@ -16,10 +16,8 @@ from kivy.core.audio import SoundLoader
 from kivy_garden.mapview import MapSource
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivy_garden.mapview import MapMarker, MapMarkerPopup
+from kivy_garden.mapview import MapMarker
 from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
-from kivy.storage.jsonstore import JsonStore
-from os.path import join
 
 
 class MyToggleButton(MDFlatButton, MDToggleButton):
@@ -306,7 +304,7 @@ class MainApp(MDApp):
         self.root.ids.mapview.zoom = zoom
         self.root.ids.mapview.center_on(lat, lon)
         return
-    
+   
     def StopUpdateCircle(self):
         try:
             self.clock.cancel()
@@ -419,10 +417,8 @@ class MainApp(MDApp):
         
         # Prüfen, ob Anker innerhalb der Boxgrenzen ist
         if bbox[0] <= self.marker_anchor.lat <= bbox[2] and bbox[1] <= self.marker_anchor.lon <= bbox[3]:
-            print("Marker is within the frame of the map view.")
             self.isAnchorVisible = True
         else:
-            print("Marker is not within the frame of the map view.")
             self.isAnchorVisible = False
         
 if __name__ == "__main__":
