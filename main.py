@@ -63,7 +63,8 @@ class MainApp(MDApp):
         if platform == 'android':
             from plyer import gps   
             try:                           
-                gps.configure(on_location=self.on_location, on_status=self.on_status)
+                # gps.configure(on_location=self.on_location, on_status=self.on_status)
+                gps.configure(on_location=self.on_location)
                 gps.start(minTime=100, minDistance=0)
             except:
                 import traceback
@@ -71,18 +72,18 @@ class MainApp(MDApp):
                 self.gps_status= "GPS is not implemented for your platform"
 
     #ggf. entfernen
-    def on_status(self, general_status):
-        if general_status== 'provider-enabled':
-            pass
-        else:
-            self.open_gps_access_popup()
+    # def on_status(self, general_status):
+    #     if general_status== 'provider-enabled':
+    #         pass
+    #     else:
+    #         self.open_gps_access_popup()
 
-    #ggf. entfernen
-    def open_gps_access_popup(self):
-        dialog = MDDialog(title="GPS Error", text= "Sie müssen die GPS daten aktivieren.")
-        dialog.size_hint = [.8,.8]
-        dialog.pos_hint = {'center_x':.5,'center_y':.5}
-        dialog.open()
+    # #ggf. entfernen
+    # def open_gps_access_popup(self):
+    #     dialog = MDDialog(title="GPS Error", text= "Sie müssen die GPS daten aktivieren.")
+    #     dialog.size_hint = [.8,.8]
+    #     dialog.pos_hint = {'center_x':.5,'center_y':.5}
+    #     dialog.open()
 
     def on_location(self, **kwargs):
         """Holt lat und lon Werte des aktuellen Standorts. 
