@@ -65,7 +65,6 @@ class MainApp(MDApp):
         if platform == 'android':
             from plyer import gps   
             try:                           
-                # gps.configure(on_location=self.on_location, on_status=self.on_status)
                 gps.configure(on_location=self.on_location)
                 gps.start(minTime=100, minDistance=0)
             except:
@@ -166,13 +165,21 @@ class MainApp(MDApp):
 
         return
     
+    def back_action(self):
+        """Beim zurück Navigieren zur MainView wird der Kreis wieder gesetzt, soweit dieser vorher gestartet wurde."""
+        if  not self.is_program_stopped:
+            self.is_program_stopped = False
+            self.root.ids.launchButton.text = "Stop"
+            self.draw_circle()            
+            return
+
     def move_anchor(self, direction):
         """Bewegt mit dem D.PAD den Anker."""
         try:
             if direction == 'up':
-                self.marker_anchor.lat +=0.0001
+                self.marker_anchor.lat += 0.0001
             if direction == 'left':
-                self.marker_anchor.lon -=0.0001
+                self.marker_anchor.lon -= 0.0001
             if direction == 'right':
                 self.marker_anchor.lon += 0.0001
             if direction == 'down':
