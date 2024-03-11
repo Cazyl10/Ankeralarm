@@ -18,6 +18,8 @@ from kivy.core.audio import SoundLoader
 from kivy_garden.mapview import MapMarker
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
+import src.ankeralarm_gps as gps
+import src.settings_controls as sc
 
 class MainApp(MDApp):
     """Hauptklasse der Anwendung."""
@@ -70,20 +72,6 @@ class MainApp(MDApp):
                 import traceback
                 traceback.print_exc()
                 self.gps_status= "GPS is not implemented for your platform"
-
-    #ggf. entfernen
-    # def on_status(self, general_status):
-    #     if general_status== 'provider-enabled':
-    #         pass
-    #     else:
-    #         self.open_gps_access_popup()
-
-    # #ggf. entfernen
-    # def open_gps_access_popup(self):
-    #     dialog = MDDialog(title="GPS Error", text= "Sie müssen die GPS daten aktivieren.")
-    #     dialog.size_hint = [.8,.8]
-    #     dialog.pos_hint = {'center_x':.5,'center_y':.5}
-    #     dialog.open()
 
     def on_location(self, **kwargs):
         """Holt lat und lon Werte des aktuellen Standorts. 
@@ -191,6 +179,7 @@ class MainApp(MDApp):
                 self.marker_anchor.lat -= 0.0001
         
             self.root.ids.mapview.trigger_update('full')
+            gps.deineMum()
         except AttributeError:
             print("Anchor-Objekt bei MoveAnchor nicht gefunden!")
 
@@ -323,12 +312,9 @@ class MainApp(MDApp):
         except AttributeError:
             print("AttributeError crash bei Stop_Update_Circle wurde abgefangen!")
 
-    def increase_radius(self):
+    def button_increase_radius(self):
         """Erhöht den Radius."""
-        #Zugriff auf das Widget mit der id 'radius'
-        self.radius_widget = self.root.ids.radius
-        #Erhöhen des aktuellen Wertes um 10
-        self.radius_widget.text = str(int(self.radius_widget.text) + 10)
+        sc.increase_radius(self)
 
     def decrease_radius(self):
         """Reduziert den Radius."""
