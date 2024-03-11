@@ -63,27 +63,12 @@ class MainApp(MDApp):
         if platform == 'android':
             from plyer import gps   
             try:                           
-                # gps.configure(on_location=self.on_location, on_status=self.on_status)
                 gps.configure(on_location=self.on_location)
                 gps.start(minTime=100, minDistance=0)
             except:
                 import traceback
                 traceback.print_exc()
                 self.gps_status= "GPS is not implemented for your platform"
-
-    #ggf. entfernen
-    # def on_status(self, general_status):
-    #     if general_status== 'provider-enabled':
-    #         pass
-    #     else:
-    #         self.open_gps_access_popup()
-
-    # #ggf. entfernen
-    # def open_gps_access_popup(self):
-    #     dialog = MDDialog(title="GPS Error", text= "Sie müssen die GPS daten aktivieren.")
-    #     dialog.size_hint = [.8,.8]
-    #     dialog.pos_hint = {'center_x':.5,'center_y':.5}
-    #     dialog.open()
 
     def on_location(self, **kwargs):
         """Holt lat und lon Werte des aktuellen Standorts. 
@@ -178,13 +163,21 @@ class MainApp(MDApp):
 
         return
     
+    def back_action(self):
+        """Beim zurück Navigieren zur MainView wird der Kreis wieder gesetzt, soweit dieser vorher gestartet wurde."""
+        if  not self.is_program_stopped:
+            self.is_program_stopped = False
+            self.root.ids.launchButton.text = "Stop"
+            self.draw_circle()            
+            return
+
     def move_anchor(self, direction):
         """Bewegt mit dem D.PAD den Anker."""
         try:
             if direction == 'up':
-                self.marker_anchor.lat +=0.0001
+                self.marker_anchor.lat += 0.0001
             if direction == 'left':
-                self.marker_anchor.lon -=0.0001
+                self.marker_anchor.lon -= 0.0001
             if direction == 'right':
                 self.marker_anchor.lon += 0.0001
             if direction == 'down':
