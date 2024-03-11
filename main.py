@@ -376,6 +376,8 @@ class MainApp(MDApp):
         if wahlsound in soundNamenListe:
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
+            self.sound.volume = 1
+            
                         
     def add_boat_marker(self, lat, lon):
         """Fügt Boot-Marker hinzu."""
