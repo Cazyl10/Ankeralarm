@@ -32,7 +32,7 @@ MDScreenManager:
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "info"
-                        app.StopUpdateCircle()
+                        app.stop_update_circle()
             
                 MDLabel:           
                     text: "Ankeralarm"
@@ -52,7 +52,7 @@ MDScreenManager:
                     # theme_text_color: "Custom"
                     # icon_size: "32sp"
                     on_press: 
-                        app.StopUpdateCircle()
+                        app.stop_update_circle()
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "settings"
@@ -63,8 +63,7 @@ MDScreenManager:
                 size_hint_y: 0.6
                 pos_hint_y: 0.9
                 on_zoom: 
-                    app.PrintZoom()
-                    app.LoadSettings()                    
+                    app.load_settings()                    
   
             MDGridLayout:
                 cols: 2
@@ -81,7 +80,7 @@ MDScreenManager:
                     font_size: "48sp"
                     text_color: 1,1,1,1
                     on_press: 
-                        app.ToggleProgram()
+                        app.toggle_program()
                 
                 MDGridLayout:
                     cols: 3
@@ -100,7 +99,7 @@ MDScreenManager:
                         id: up
                         icon_size: "32sp"
                         icon: "arrow-up"
-                        on_press: app.MoveAnchor('up')
+                        on_press: app.move_anchor('up')
                     MDIconButton:
                         md_bg_color: "#F0544F"
                         size_hint_x: 1
@@ -114,7 +113,7 @@ MDScreenManager:
                         id: left
                         icon_size: "32sp"
                         icon: "arrow-left"
-                        on_press: app.MoveAnchor('left')
+                        on_press: app.move_anchor('left')
                     MDIconButton:
                         md_bg_color: "#3A3335"
                         size_hint_x: 1
@@ -122,7 +121,7 @@ MDScreenManager:
                         icon_size: "32sp"
                         icon: "rotate-right"
                         text_color: 0,0,0,0
-                        on_press: app.CenterMapButton()
+                        on_press: app.center_map_button()
                     MDIconButton:
                         md_bg_color: "#F0544F"
                         size_hint_x: 1
@@ -130,7 +129,7 @@ MDScreenManager:
                         id: right
                         icon_size: "32sp"
                         icon: "arrow-right"
-                        on_press: app.MoveAnchor('right')
+                        on_press: app.move_anchor('right')
                     MDIconButton:
                         md_bg_color: "#F0544F"
                         size_hint_x: 1
@@ -144,7 +143,7 @@ MDScreenManager:
                         id: down
                         icon_size: "32sp"
                         icon: "arrow-down"
-                        on_press: app.MoveAnchor('down')
+                        on_press: app.move_anchor('down')
                     MDIconButton:
                         md_bg_color: "#F0544F"
                         size_hint_x: 1
@@ -181,7 +180,7 @@ MDScreenManager:
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main"
-                        app.DrawCircle()
+                        app.draw_circle()
                 MDLabel:
                     text: "Einstellungen"
                     halign: "center"
@@ -210,23 +209,23 @@ MDScreenManager:
                     font_size: "32sp"
                     input_filter: 'int'
                     size_hint: 1, 1
-                    on_text: app.WriteToFile()
+                    on_text: app.write_to_file()
 
                 MDIconButton:
                     icon: "plus"
                     valign: "center"
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
-                    on_press: app.IncreaseRadius()
-                    on_release: app.WriteToFile()
+                    on_press: app.increase_radius()
+                    on_release: app.write_to_file()
 
                 MDIconButton:
                     icon: "minus"
                     valign: "center"
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
-                    on_press: app.DecreaseRadius()
-                    on_release: app.WriteToFile()                        
+                    on_press: app.decrease_radius()
+                    on_release: app.write_to_file()                        
 
             MDGridLayout:
                 rows: 1
@@ -246,7 +245,7 @@ MDScreenManager:
                     text_color: 1,1,1,1
                     text: 'Alarm1'
                     values: ('Alarm1', 'Alarm2', 'Alarm3')
-                    on_text: app.WriteToFile()
+                    on_text: app.write_to_file()
 
             MDGridLayout:
                 rows:1
@@ -310,7 +309,7 @@ MDScreenManager:
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main"
-                        app.DrawCircle()
+                        app.draw_circle()
     
 
                     

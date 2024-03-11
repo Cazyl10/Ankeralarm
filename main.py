@@ -1,3 +1,5 @@
+"""Programm für Ankeralarm-App"""
+
 import os
 import json
 import math
@@ -13,34 +15,9 @@ from kivymd.uix.label import MDLabel
 from kivy.graphics import Line, Color
 from kivymd.uix.dialog import MDDialog
 from kivy.core.audio import SoundLoader
-from kivy_garden.mapview import MapSource
+from kivy_garden.mapview import MapMarker
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivy_garden.mapview import MapMarker
-from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
-
-
-class MyToggleButton(MDFlatButton, MDToggleButton):
-    pass
-
-# class FileChooserPopup(Popup):
-#     def __init__(self, **kwargs):
-#         super(FileChooserPopup, self).__init__(**kwargs)
-#         self.title = "Datei auswählen"
-#         self.size_hint = (0.9, 0.9)
-#         self.filechooser = FileChooserListView(filters=['*.mp3'])
-#         self.filechooser.bind(on_selection=self.load_sound)
-#         self.add_widget(self.filechooser)
-    
-#     def load_sound(self, instance, filename):
-#         if instance:
-#             sound = SoundLoader.load(os.path.join(instance.path, filename[0]))
-#             self.root.ids.sound_spinner.text = filename
-#             print("Ausgewählte Datei:", filename[0])
-#             # Schließen Sie das Popup-Fenster
-#             self.dismiss()
-#             if sound:
-#                 sound.play()
 
 class MainApp(MDApp):
     """Hauptklasse der Anwendung."""
@@ -50,38 +27,40 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
         self.marker = False
         self.dialog = None
-        self.isProgramStopped = True
-        self.useOnce = True
-        self.isAnchorVisible = True
+        self.is_program_stopped = True
+        self.use_once = True
+        self.is_anchor_visible = True
         Clock.schedule_once(self.get_permission, 0)
         os.environ["SDL_AUDIODRIVER"] = "android"
-    
+
     def build(self):
         screen = Builder.load_file("windowsmd.kv")
         self.theme_cls.theme_style = "Dark"
-        Clock.schedule_once(self.ClassThatDoesEverything, 1)
+        Clock.schedule_once(self.class_that_does_everything, 1)
         return screen
     
     #region GPS
     def get_permission(self, dt):
-         if platform == 'android':
+        """Holt Berechtigung für GPS"""
+        if platform == 'android':
             from android.permissions import Permission, request_permissions
             permissions = [Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION]
-            request_permissions(permissions, self.PermissionCallback)
+            request_permissions(permissions, self.permission_callback)
             return True
-         else:
-             return False 
+        
+        return False
 
-    def PermissionCallback(self, permissions, results):
+    def permission_callback(self, permissions, results):
         """Callback-Funktion für Berechtigungen."""
         if all(results):
             print("Rechte erteilt")
-            self.GetGps()
+            self.get_gps()
         else:
             print("Rechte abgelehnt")
 
-    def GetGps(self, *args):
-        if platform == 'android' or platform == 'ios':
+    def get_gps(self, *args):
+        """Holt GPS-Daten mithilfe von plyer"""
+        if platform == 'android':
             from plyer import gps   
             try:                           
                 gps.configure(on_location=self.on_location, on_status=self.on_status)
@@ -90,78 +69,84 @@ class MainApp(MDApp):
                 import traceback
                 traceback.print_exc()
                 self.gps_status= "GPS is not implemented for your platform"
-           
-    def on_status(self, general_status, status_message):
+
+    #ggf. entfernen
+    def on_status(self, general_status):
         if general_status== 'provider-enabled':
             pass
         else:
-            self.OpenGpsAccessPopup()
+            self.open_gps_access_popup()
 
-    def OpenGpsAccessPopup(self):
+    #ggf. entfernen
+    def open_gps_access_popup(self):
         dialog = MDDialog(title="GPS Error", text= "Sie müssen die GPS daten aktivieren.")
         dialog.size_hint = [.8,.8]
         dialog.pos_hint = {'center_x':.5,'center_y':.5}
         dialog.open()
 
     def on_location(self, **kwargs):
+        """Holt lat und lon Werte des aktuellen Standorts. 
+        Zudem fügt es diese beim Start der Mapview hinzu."""
         self.gps_latitude = kwargs.get('lat', None) 
         self.gps_longitude = kwargs.get('lon', None)
         if hasattr(self,'gps_latitude') and hasattr(self,'gps_longitude'):
-            if self.useOnce:
+            if self.use_once:
                 if  self.root.ids.mapview.lat and self.root.ids.mapview.lon:
                     self.root.ids.mapview.lat = self.gps_latitude
                     self.root.ids.mapview.lon = self.gps_longitude
-                    self.CenterMap(self.gps_latitude, self.gps_longitude)
-                    self.useOnce = False
-            self.UpdateBoat()
-        print("ICH BIN IN ON LOCAAAAAAAAAAAAAAAAAAAAATIONNNNNNNNNNNNNNNNNNNNNN")
+                    self.center_map(self.gps_latitude, self.gps_longitude)
+                    self.use_once = False
+            self.update_boat()
     #endregion
     
-    def ToggleProgram(self):
+    def toggle_program(self):
         """Startet oder stoppt das Programm."""
-        if self.isProgramStopped:
-            self.DrawCircle()
+        if self.is_program_stopped:
+            self.draw_circle()
             self.root.ids.launchButton.text = "Stop"
-            self.isProgramStopped = False
+            self.is_program_stopped = False
             return
-        if not self.isProgramStopped:
-            self.StopUpdateCircle()
+        if not self.is_program_stopped:
+            self.stop_update_circle()
             self.root.ids.launchButton.text = "Start"
-            self.isProgramStopped = True
+            self.is_program_stopped = True
             return
 
-    def AddMarker(self):
+    def add_marker(self):
         """Fügt einen Marker hinzu."""
         if self.marker:
             return
 
-        self.marker_anchor = MapMarker(lat=self.marker_boat.lat, lon=self.marker_boat.lon, source='src/images/anchor_32.png')
+        self.marker_anchor = MapMarker(lat=self.marker_boat.lat, 
+                                       lon=self.marker_boat.lon, 
+                                       source='src/images/anchor_32.png')
         self.root.ids.mapview.add_widget(self.marker_anchor)
 
         self.marker = True
 
-    def UpdateBoat(self):
+    def update_boat(self):
         """Aktualisiert den aktuellen Standort."""
         if platform == 'win':
             self.marker_boat.lat = 50.0
             self.marker_boat.lon = 8.0
             self.root.ids.mapview.trigger_update('full')
         elif platform == 'android':
-            if self.BoatExist():
+            if self.boat_exist():
                 print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
                 self.marker_boat.lat = self.gps_latitude
                 self.marker_boat.lon = self.gps_longitude
                 print(f"LAT:{self.marker_boat.lat}, LON:{self.marker_boat.lon}")
                 self.root.ids.mapview.trigger_update('full')
 
-
-    def BoatExist(self):
+    def boat_exist(self):
+        """Prüfen ob Boot-Marker bereits vorhanden ist."""
         if hasattr(self,'marker_boat'):
             return True
         else:
             return False
         
-    def DrawCircle(self):
+    def draw_circle(self):
+        """Zeichne den Kreis auf dem Canvas."""
         self.offcenter = 21
         if platform == 'win':
             lat = 50.0
@@ -177,19 +162,22 @@ class MainApp(MDApp):
             print("Marker Boot bei DrawCircle wurde nicht gefunden!")
             return
 
-        self.CenterMap(lat=lat, lon=lon)
-        self.AddMarker()
-        self.CalculateDistance()
+        self.center_map(lat=lat, lon=lon)
+        self.add_marker()
+        self.calculate_distance()
 
         with self.root.canvas:
             Color(1,0,0,1)
-            self.line = Line(circle=(self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter), width=2)
+            self.line = Line(circle=(self.marker_anchor.pos[0]+self.offcenter, 
+                                     self.marker_anchor.pos[1]+self.offcenter, 
+                                     int(self.root.ids.radius.text)*self.pixel_per_meter), 
+                                     width=2)
 
-        self.clock = Clock.schedule_interval(self.UpdateCircle, 1/250)
+        self.clock = Clock.schedule_interval(self.update_circle, 1/60)
 
         return
     
-    def MoveAnchor(self, direction):
+    def move_anchor(self, direction):
         """Bewegt mit dem D.PAD den Anker."""
         try:
             if direction == 'up':
@@ -205,13 +193,18 @@ class MainApp(MDApp):
         except AttributeError:
             print("Anchor-Objekt bei MoveAnchor nicht gefunden!")
 
-    def CalculateDistance(self):
+    def calculate_distance(self):
+        """Berechnet die Distanz zwischen 2 Markern in Pixeln."""
         current_width_x=self.root.size[0]
 
         # hole Koordinaten vom linken Rand
-        left_coord = self.root.ids.mapview.get_latlon_at(0,0,self.root.ids.mapview.zoom)
+        left_coord = self.root.ids.mapview.get_latlon_at(0,
+                                                         0,
+                                                         self.root.ids.mapview.zoom)
         # hole Koordinaten vom rechten Rand
-        right_coord = self.root.ids.mapview.get_latlon_at(current_width_x,0,self.root.ids.mapview.zoom)
+        right_coord = self.root.ids.mapview.get_latlon_at(current_width_x,
+                                                          0,
+                                                          self.root.ids.mapview.zoom)
 
         # Entfernungsberechnung
         dx = 71.5 * (left_coord[1] - right_coord[1])
@@ -222,41 +215,55 @@ class MainApp(MDApp):
         # Umrechnung von Fensterbreite in Pixel und Distanz in Meter zu Pixel Pro Meter 
         self.pixel_per_meter = (current_width_x / distance) / 1000
 
-    def UpdateCircle(self, *args):
+    def update_circle(self, *args):
         """Aktualisiere den Kreis auf dem Canvas"""
-        self.CalculateDistance()
+        self.calculate_distance()
 
-        if self.isAnchorVisible:
-            self.line.circle = self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter
+        anchor_lat = self.marker_anchor.pos[0]+self.offcenter
+        anchor_lon = self.marker_anchor.pos[1]+self.offcenter
+        radius = int(self.root.ids.radius.text)*self.pixel_per_meter
+
+        if self.is_anchor_visible:
+            self.line.circle = anchor_lat, anchor_lon, radius
         else:
             self.line.circle = 0, 0, 0
-        self.UpdateBoat()
-        # self.IsInsideCircle(self.marker_anchor.pos[0]+self.offcenter, self.marker_anchor.pos[1]+self.offcenter, int(self.root.ids.radius.text)*self.pixel_per_meter, self.marker_boat.pos[0], self.marker_boat.pos[1])
-        
-        # hole aktuelle Marker Positionen und prüfen, ob Boot innerhalb des Radius ist
-        currAnchorPos = self.GetCurrentAnchorLocation()
-        currBoatPos = self.GetCurrentBoatLocation()
-        self.IsInsideCircle(currAnchorPos[0], currAnchorPos[1], int(self.root.ids.radius.text)*self.pixel_per_meter, currBoatPos[0], currBoatPos[1])
-        
-        self.CheckIfMarkerOutOfScreen()
+        self.update_boat()
 
-    def GetCurrentAnchorLocation(self):
-        return self.root.ids.mapview.get_window_xy_from(self.marker_anchor.lat, self.marker_anchor.lon, self.root.ids.mapview.zoom)
+        # hole aktuelle Marker Positionen und prüfen, ob Boot innerhalb des Radius ist
+        currAnchorPos = self.get_current_anchor_location()
+        currBoatPos = self.get_current_boat_location()
+        self.is_inside_circle(currAnchorPos[0], 
+                              currAnchorPos[1], 
+                              int(self.root.ids.radius.text)*self.pixel_per_meter, 
+                              currBoatPos[0], 
+                              currBoatPos[1])
+        
+        self.check_if_marker_out_of_screen()
+
+    def get_current_anchor_location(self):
+        """Gibt die aktuelle Ankerposition zurück."""
+        return self.root.ids.mapview.get_window_xy_from(self.marker_anchor.lat, 
+                                                        self.marker_anchor.lon, 
+                                                        self.root.ids.mapview.zoom)
     
-    def GetCurrentBoatLocation(self):
-        return self.root.ids.mapview.get_window_xy_from(self.marker_boat.lat, self.marker_boat.lon, self.root.ids.mapview.zoom)
+    def get_current_boat_location(self):
+        """Gibt die aktuelle Bootposition zurück."""
+        return self.root.ids.mapview.get_window_xy_from(self.marker_boat.lat, 
+                                                        self.marker_boat.lon, 
+                                                        self.root.ids.mapview.zoom)
     
     # check if point is inside circle
-    def IsInsideCircle(self, circle_x, circle_y, rad, x, y, *args):
-        if ((x - circle_x) * (x - circle_x) + (y - circle_y) * (y - circle_y) <= rad * rad):
+    def is_inside_circle(self, circle_x, circle_y, rad, x, y, *args):
+        """Prüfen ob Boot innerhalb des Radius ist."""
+        if (x - circle_x) * (x - circle_x) + (y - circle_y) * (y - circle_y) <= rad * rad:
             return
         else:
-            self.StopUpdateCircle()
-            self.ShowDialog()
-            self.PlaySound()
+            self.stop_update_circle()
+            self.show_dialog()
+            self.play_sound()
             return
     
-    def ShowDialog(self):
+    def show_dialog(self):
         """Alarm Meldung falls der Kreis verlassen wurde."""
         if not self.dialog:
             self.dialog = MDDialog(
@@ -277,35 +284,36 @@ class MainApp(MDApp):
                 buttons=[
                     MDFlatButton(
                         text="CLOSE",
-                        on_release=self.CloseDialog,
+                        on_release=self.close_dialog,
                         
                     )
                 ],
             )
         self.dialog.open()
 
-    def CloseDialog(self, *args):
+    def close_dialog(self, *args):
         """Schließe den Dialog mit dem Titel ALARM! """
         self.dialog.dismiss()
-        self.DrawCircle()
+        self.draw_circle()
         self.sound.stop()
-    def PrintZoom(self):
-        print(self.root.ids.mapview.zoom)
 
-    def CenterMapButton(self):
+    def center_map_button(self):
+        """Zentriere Map beim Button-Click."""
         if platform == 'win':
             lat =  48.4715279
             lon = 7.9512879
-            self.CenterMap(lat, lon, 16)
+            self.center_map(lat, lon, 16)
         elif platform == 'android':
-            self.CenterMap(self.gps_latitude, self.gps_longitude, zoom=19)
+            self.center_map(self.gps_latitude, self.gps_longitude, zoom=19)
 
-    def CenterMap(self, lat, lon, zoom=19):
+    def center_map(self, lat, lon, zoom=19):
+        """Zentriert die Map."""
         self.root.ids.mapview.zoom = zoom
         self.root.ids.mapview.center_on(lat, lon)
         return
    
-    def StopUpdateCircle(self):
+    def stop_update_circle(self):
+        """Stoppt das zeichnen des Kreises."""
         try:
             self.clock.cancel()
             self.line.circle = 0,0,0
@@ -314,19 +322,22 @@ class MainApp(MDApp):
         except AttributeError:
             print("AttributeError crash bei Stop_Update_Circle wurde abgefangen!")
 
-    def IncreaseRadius(self):
+    def increase_radius(self):
+        """Erhöht den Radius."""
         #Zugriff auf das Widget mit der id 'radius'
         self.radius_widget = self.root.ids.radius
         #Erhöhen des aktuellen Wertes um 10
         self.radius_widget.text = str(int(self.radius_widget.text) + 10)
 
-    def DecreaseRadius(self):
+    def decrease_radius(self):
+        """Reduziert den Radius."""
         # Zugriff auf das Widget mit der id 'radius'
         self.radius_widget = self.root.ids.radius
         # Verringere den aktuellen Wert um 10
         self.radius_widget.text = str(int(self.radius_widget.text) - 10)
     
-    def WriteToFile(self):
+    def write_to_file(self):
+        """Schreibt den Radius und ausgewählten Sound in daten.json."""
         self.radius_widget = self.root.ids.radius.text
         self.spinner_widget = self.root.ids.sound_spinner.text
 
@@ -350,7 +361,8 @@ class MainApp(MDApp):
             with open ("src/json/daten.json", "w") as file:
                 json.dump(dictionary,file)
 
-    def LoadSettings(self):
+    def load_settings(self):
+        """Lädt den Radius und ausgewählten Sound aus daten.json."""
         if platform == 'android':
             pfad = Path(__file__).resolve().parent
             data_dir = pfad / 'src/json/daten.json'
@@ -367,14 +379,16 @@ class MainApp(MDApp):
         self.root.ids.sound_spinner.text = data['Audio Data']
         f.close()
 
-    def PlaySound(self):
+    def play_sound(self):
+        """Spielt den ausgewählten Sound ab."""
         wahlsound = self.root.ids.sound_spinner.text
         soundNamenListe =["Alarm1","Alarm2","Alarm3"]
         if wahlsound in soundNamenListe:
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
                         
-    def AddBoatMarker(self, lat, lon):
+    def add_boat_marker(self, lat, lon):
+        """Fügt Boot-Marker hinzu."""
         if platform == 'win':
             lat = 50.0
             lon = 8.0
@@ -387,11 +401,12 @@ class MainApp(MDApp):
                 lat = 50.0
                 lon = 8.0
 
-        if not self.BoatExist():
+        if not self.boat_exist():
             self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
             self.root.ids.mapview.add_widget(self.marker_boat)
             
-    def ClassThatDoesEverything(self, dt):
+    def class_that_does_everything(self, dt):
+        """Startet das Programm."""
         # while 1:
         if platform == 'win':
             lat = 50.0
@@ -407,19 +422,23 @@ class MainApp(MDApp):
                 lat = 50.0
                 lon = 8.0
 
-        self.AddBoatMarker(lat, lon)
-        self.CenterMap(lat, lon)
+        self.add_boat_marker(lat, lon)
+        self.center_map(lat, lon)
         self.root.ids.mapview.trigger_update('full')
 
     # Prüfen, ob Anker innhalb des Mapview Frames ist um Radius auszublenden
-    def CheckIfMarkerOutOfScreen(self):
+    def check_if_marker_out_of_screen(self):
+        """Prüfen ob der Anker innerhalb des Frames ist."""
         bbox = self.root.ids.mapview.get_bbox()
         
+        lat_condition = bbox[0] <= self.marker_anchor.lat <= bbox[2]
+        lon_condition = bbox[1] <= self.marker_anchor.lon <= bbox[3]
+
         # Prüfen, ob Anker innerhalb der Boxgrenzen ist
-        if bbox[0] <= self.marker_anchor.lat <= bbox[2] and bbox[1] <= self.marker_anchor.lon <= bbox[3]:
-            self.isAnchorVisible = True
+        if   lat_condition and lon_condition:
+            self.is_anchor_visible = True
         else:
-            self.isAnchorVisible = False
+            self.is_anchor_visible = False
         
 if __name__ == "__main__":
     MainApp().run()
