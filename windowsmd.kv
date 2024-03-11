@@ -180,7 +180,7 @@ MDScreenManager:
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main"
-                        app.back_action()
+                        app.draw_circle()
                 MDLabel:
                     text: "Einstellungen"
                     halign: "center"
@@ -216,7 +216,7 @@ MDScreenManager:
                     valign: "center"
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
-                    on_press: app.increase_radius()
+                    on_press: app.button_increase_radius()
                     on_release: app.write_to_file()
 
                 MDIconButton:
@@ -224,7 +224,7 @@ MDScreenManager:
                     valign: "center"
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
-                    on_press: app.decrease_radius()
+                    on_press: app.button_decrease_radius()
                     on_release: app.write_to_file()                        
 
             MDGridLayout:
@@ -309,7 +309,7 @@ MDScreenManager:
                     on_release:
                         root.current_heroes = ["hero"]
                         root.current = "main"
-                        app.back_action()
+                        app.draw_circle()
     
 
                     

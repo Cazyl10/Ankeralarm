@@ -1,8 +1,5 @@
 from kivy.utils import platform
 
-def deineMum():
-    print("Deine Mum")
-
 def get_permission(self, dt):
         """Holt Berechtigung für GPS"""
         if platform == 'android':

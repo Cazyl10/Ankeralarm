@@ -186,7 +186,6 @@ class MainApp(MDApp):
                 self.marker_anchor.lat -= 0.0001
         
             self.root.ids.mapview.trigger_update('full')
-            gps.deineMum()
         except AttributeError:
             print("Anchor-Objekt bei MoveAnchor nicht gefunden!")
 
@@ -323,12 +322,9 @@ class MainApp(MDApp):
         """Erhöht den Radius."""
         sc.increase_radius(self)
 
-    def decrease_radius(self):
+    def button_decrease_radius(self):
         """Reduziert den Radius."""
-        # Zugriff auf das Widget mit der id 'radius'
-        self.radius_widget = self.root.ids.radius
-        # Verringere den aktuellen Wert um 10
-        self.radius_widget.text = str(int(self.radius_widget.text) - 10)
+        sc.decrease_radius(self)
     
     def write_to_file(self):
         """Schreibt den Radius und ausgewählten Sound in daten.json."""
