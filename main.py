@@ -174,7 +174,7 @@ class MainApp(MDApp):
                                      int(self.root.ids.radius.text)*self.pixel_per_meter), 
                                      width=2)
 
-        self.clock = Clock.schedule_interval(self.update_circle, 1/60)
+        self.clock = Clock.schedule_interval(self.update_circle, 1/1000)
 
         return
     
