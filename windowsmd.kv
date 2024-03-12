@@ -63,7 +63,10 @@ MDScreenManager:
                 size_hint_y: 0.6
                 pos_hint_y: 0.9
                 on_zoom: 
-                    app.load_settings()                    
+                    app.load_settings()
+                canvas:
+                    Color:
+                        rgba: 1, 0, 0, 1                    
   
             MDGridLayout:
                 cols: 2

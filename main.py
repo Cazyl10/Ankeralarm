@@ -154,8 +154,13 @@ class MainApp(MDApp):
         self.add_marker()
         self.calculate_distance()
 
-        with self.root.canvas:
-            Color(1,0,0,1)
+        # with self.root.canvas:
+        #     Color(1,0,0,1)
+        #     self.line = Line(circle=(self.marker_anchor.pos[0]+self.offcenter, 
+        #                              self.marker_anchor.pos[1]+self.offcenter, 
+        #                              int(self.root.ids.radius.text)*self.pixel_per_meter), 
+        #                              width=2)
+        with self.root.ids.mapview.canvas:
             self.line = Line(circle=(self.marker_anchor.pos[0]+self.offcenter, 
                                      self.marker_anchor.pos[1]+self.offcenter, 
                                      int(self.root.ids.radius.text)*self.pixel_per_meter), 
@@ -284,14 +289,17 @@ class MainApp(MDApp):
                         
                     )
                 ],
+                on_dismiss=self.close_without_cancel_button,
             )
         self.dialog.open()
+
+    def close_without_cancel_button(self,  *args):
+        self.draw_circle()
+        self.sound.stop()
 
     def close_dialog(self, *args):
         """Schließe den Dialog mit dem Titel ALARM! """
         self.dialog.dismiss()
-        self.draw_circle()
-        self.sound.stop()
 
     def center_map_button(self):
         """Zentriere Map beim Button-Click."""
