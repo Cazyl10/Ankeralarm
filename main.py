@@ -5,21 +5,25 @@ import json
 import math
 from pathlib import Path
 from random import random
+
 from kivy.clock import Clock
-from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.utils import platform
 from kivy.uix.image import Image
 from kivy.core.window import Window
-from kivymd.uix.label import MDLabel
 from kivy.graphics import Line, Color
-from kivymd.uix.dialog import MDDialog
 from kivy.core.audio import SoundLoader
 from kivy_garden.mapview import MapMarker
+
+from kivymd.app import MDApp
+from kivymd.uix.label import MDLabel
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
+
 import src.ankeralarm_gps as gps
 import src.settings_controls as sc
+import src.d_pad as d_pad
 
 class MainApp(MDApp):
     """Hauptklasse der Anwendung."""
@@ -178,21 +182,9 @@ class MainApp(MDApp):
             self.draw_circle()            
             return
 
-    def move_anchor(self, direction):
+    def move_anchor_button(self, direction):
         """Bewegt mit dem D.PAD den Anker."""
-        try:
-            if direction == 'up':
-                self.marker_anchor.lat += 0.0001
-            if direction == 'left':
-                self.marker_anchor.lon -= 0.0001
-            if direction == 'right':
-                self.marker_anchor.lon += 0.0001
-            if direction == 'down':
-                self.marker_anchor.lat -= 0.0001
-        
-            self.root.ids.mapview.trigger_update('full')
-        except AttributeError:
-            print("Anchor-Objekt bei MoveAnchor nicht gefunden!")
+        d_pad.move_anchor(self, direction)
 
     def calculate_distance(self):
         """Berechnet die Distanz zwischen 2 Markern in Pixeln."""
@@ -294,6 +286,7 @@ class MainApp(MDApp):
         self.dialog.open()
 
     def close_without_cancel_button(self,  *args):
+        """Kreis zeichnen und Sound stoppen sobald Warnung ausgeblendet wird."""
         self.draw_circle()
         self.sound.stop()
 
