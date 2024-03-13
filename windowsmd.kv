@@ -212,7 +212,9 @@ MDScreenManager:
                     font_size: "32sp"
                     input_filter: 'int'
                     size_hint: 1, 1
+                    max_text_length: 6
                     on_text: app.write_to_file()
+                    on_error: app.settings_error_button()
 
                 MDIconButton:
                     icon: "plus"

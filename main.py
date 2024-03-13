@@ -181,6 +181,7 @@ class MainApp(MDApp):
             self.root.ids.launchButton.text = "Stop"
             self.draw_circle()            
             return
+        sc.check_input(self)
 
     def move_anchor_button(self, direction):
         """Bewegt mit dem D.PAD den Anker."""
@@ -327,6 +328,10 @@ class MainApp(MDApp):
         """Reduziert den Radius."""
         sc.decrease_radius(self)
     
+    def settings_error_button(self):
+        """Prüfen ob eingabe den grenzwert unter- oder überschreitet"""
+        sc.settings_error(self)
+
     def write_to_file(self):
         """Schreibt den Radius und ausgewählten Sound in daten.json."""
         self.radius_widget = self.root.ids.radius.text
