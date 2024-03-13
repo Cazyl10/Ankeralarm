@@ -21,15 +21,23 @@ def settings_error(self):
 
         if self.radius_widget == None:
                 return
-
+        
         if len(self.radius_widget.text) > 6:
                self.radius_widget.text = "100000"
-
-        if len(self.radius_widget.text) == 0:
-               self.radius_widget.text = "10"
+               return
+        
+        if int(self.radius_widget.text) < 10:
+                self.radius_widget.text = "10"
+                return
+        
+        
 
 def check_input(self):
         self.radius_widget = self.root.ids.radius
 
         if self.radius_widget.text == '':
                 self.radius_widget.text = "10"
+
+        if len(self.radius_widget.text) < 2:
+                self.radius_widget.text = "10"
+                return
