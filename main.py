@@ -59,11 +59,12 @@ class MainApp(MDApp):
 
     def permission_callback(self, permissions, results):
         """Callback-Funktion für Berechtigungen."""
-        if all(results):
-            print("Rechte erteilt")
-            self.get_gps()
-        else:
-            print("Rechte abgelehnt")
+        # if all(results):
+        #     print("Rechte erteilt")
+        #     self.get_gps()
+        # else:
+        #     print("Rechte abgelehnt")
+        gps.permission_callback(self, permissions, results)
 
     def get_gps(self, *args):
         """Holt GPS-Daten mithilfe von plyer"""

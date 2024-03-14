@@ -10,3 +10,10 @@ def get_permission(self, dt):
         
         return False
 
+def permission_callback(self, permissions, results):
+        """Callback-Funktion für Berechtigungen."""
+        if all(results):
+            print("Rechte erteilt")
+            self.get_gps()
+        else:
+            print("Rechte abgelehnt")
