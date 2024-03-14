@@ -48,13 +48,14 @@ class MainApp(MDApp):
     #region GPS
     def get_permission(self, dt):
         """Holt Berechtigung für GPS"""
-        if platform == 'android':
-            from android.permissions import Permission, request_permissions
-            permissions = [Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION]
-            request_permissions(permissions, self.permission_callback)
-            return True
+        # if platform == 'android':
+        #     from android.permissions import Permission, request_permissions
+        #     permissions = [Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION]
+        #     request_permissions(permissions, self.permission_callback)
+        #     return True
         
-        return False
+        # return False
+        gps.get_permission(self, dt)
 
     def permission_callback(self, permissions, results):
         """Callback-Funktion für Berechtigungen."""
@@ -385,8 +386,7 @@ class MainApp(MDApp):
             self.sound = SoundLoader.load(os.path.join(f'src/sounds/{wahlsound}.wav'))
             self.sound.play()
             self.sound.volume = 1
-            
-                        
+                                 
     def add_boat_marker(self, lat, lon):
         """Fügt Boot-Marker hinzu."""
         if platform == 'win':
