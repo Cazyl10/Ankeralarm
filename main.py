@@ -41,7 +41,7 @@ class MainApp(MDApp):
     def build(self):
         screen = Builder.load_file("windowsmd.kv")
         self.theme_cls.theme_style = "Dark"
-        Clock.schedule_once(self.class_that_does_everything, 1)
+        Clock.schedule_once(self.launch_app, 1)
         return screen
     
     #region GPS
@@ -403,7 +403,7 @@ class MainApp(MDApp):
             self.marker_boat = MapMarker(lat=lat, lon=lon, source='src/images/boat_32.png')
             self.root.ids.mapview.add_widget(self.marker_boat)
             
-    def class_that_does_everything(self, dt):
+    def launch_app(self, dt):
         """Startet das Programm."""
         # while 1:
         if platform == 'win':
