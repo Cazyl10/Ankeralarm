@@ -332,10 +332,11 @@ class MainApp(MDApp):
         """Prüfen ob eingabe den grenzwert unter- oder überschreitet"""
         sc.settings_error(self)
 
-    def write_to_file(self):
+    def write_to_file_button(self):
         """Schreibt den Radius und ausgewählten Sound in daten.json."""
-        self.radius_widget = self.root.ids.radius.text
-        self.spinner_widget = self.root.ids.sound_spinner.text
+        sc.write_to_file(self)
+        # self.radius_widget = self.root.ids.radius.text
+        # self.spinner_widget = self.root.ids.sound_spinner.text
 
         if platform == 'android':
             pfad = Path(__file__).resolve().parent

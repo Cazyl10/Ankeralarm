@@ -213,7 +213,7 @@ MDScreenManager:
                     input_filter: 'int'
                     size_hint: 1, 1
                     max_text_length: 6
-                    on_text: app.write_to_file()
+                    on_text: app.write_to_file_button()
                     on_error: app.settings_error_button()
 
                 MDIconButton:
@@ -222,7 +222,7 @@ MDScreenManager:
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
                     on_press: app.button_increase_radius()
-                    on_release: app.write_to_file()
+                    on_release: app.write_to_file_button()
 
                 MDIconButton:
                     icon: "minus"
@@ -230,7 +230,7 @@ MDScreenManager:
                     md_bg_color: "#D81E5B"
                     size_hint: 1, 1
                     on_press: app.button_decrease_radius()
-                    on_release: app.write_to_file()                        
+                    on_release: app.write_to_file_button()                        
 
             MDGridLayout:
                 rows: 1
@@ -250,7 +250,7 @@ MDScreenManager:
                     text_color: 1,1,1,1
                     text: 'Alarm1'
                     values: ('Alarm1', 'Alarm2', 'Alarm3')
-                    on_text: app.write_to_file()
+                    on_text: app.write_to_file_button()
 
             MDGridLayout:
                 rows:1
