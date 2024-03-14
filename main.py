@@ -1,9 +1,9 @@
 """Programm für Ankeralarm-App"""
 
 import os
-# import json
+import json
 import math
-# from pathlib import Path
+from pathlib import Path
 from random import random
 
 from kivy.clock import Clock
@@ -331,50 +331,48 @@ class MainApp(MDApp):
         """Prüfen ob eingabe den grenzwert unter- oder überschreitet"""
         sc.settings_error(self)
 
-    def write_to_file_button(self):
+    def write_to_file(self):
         """Schreibt den Radius und ausgewählten Sound in daten.json."""
-        sc.write_to_file(self)
-        # self.radius_widget = self.root.ids.radius.text
-        # self.spinner_widget = self.root.ids.sound_spinner.text
+        self.radius_widget = self.root.ids.radius.text
+        self.spinner_widget = self.root.ids.sound_spinner.text
 
-        # if platform == 'android':
-        #     pfad = Path(__file__).resolve().parent
-        #     data_dir = pfad / 'src/json/daten.json'
-        #     #data_dir = MainApp().user_data_dir
-        #     dictionary = {
-        #     "Bereich": "Einstellungen",
-        #     "Radius": self.radius_widget,
-        #     'Audio Data': self.spinner_widget
-        #     }
-        #     with open (data_dir, "w") as file:
-        #         json.dump(dictionary,file)
-        # elif platform == 'win':
-        #     dictionary = {
-        #     "Bereich": "Einstellungen",
-        #     "Radius": self.radius_widget,
-        #     'Audio Data': self.spinner_widget
-        #     }
-        #     with open ("src/json/daten.json", "w") as file:
-        #         json.dump(dictionary,file)
+        if platform == 'android':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
+            #data_dir = MainApp().user_data_dir
+            dictionary = {
+            "Bereich": "Einstellungen",
+            "Radius": self.radius_widget,
+            'Audio Data': self.spinner_widget
+            }
+            with open (data_dir, "w") as file:
+                json.dump(dictionary,file)
+        elif platform == 'win':
+            dictionary = {
+            "Bereich": "Einstellungen",
+            "Radius": self.radius_widget,
+            'Audio Data': self.spinner_widget
+            }
+            with open ("src/json/daten.json", "w") as file:
+                json.dump(dictionary,file)
 
-    def load_settings_button(self):
+    def load_settings(self):
         """Lädt den Radius und ausgewählten Sound aus daten.json."""
-        sc.load_settings(self)
-        # if platform == 'android':
-        #     pfad = Path(__file__).resolve().parent
-        #     data_dir = pfad / 'src/json/daten.json'
+        if platform == 'android':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
             
-        #     #data_dir = MainApp().user_data_dir + "/daten.json"
-        # elif platform == 'win':
-        #     pfad = Path(__file__).resolve().parent
-        #     data_dir = pfad / 'src/json/daten.json'
-        #     #data_dir = "src/json/daten.json"
+            #data_dir = MainApp().user_data_dir + "/daten.json"
+        elif platform == 'win':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
+            #data_dir = "src/json/daten.json"
 
-        # f = open(data_dir)
-        # data = json.load(f)
-        # self.root.ids.radius.text = data['Radius']
-        # self.root.ids.sound_spinner.text = data['Audio Data']
-        # f.close()
+        f = open(data_dir)
+        data = json.load(f)
+        self.root.ids.radius.text = data['Radius']
+        self.root.ids.sound_spinner.text = data['Audio Data']
+        f.close()
 
     def play_sound(self):
         """Spielt den ausgewählten Sound ab."""
