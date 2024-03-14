@@ -71,3 +71,21 @@ def write_to_file(self):
             }
             with open ("src/json/daten.json", "w") as file:
                 json.dump(dictionary,file)
+
+def load_settings(self):
+        """Lädt den Radius und ausgewählten Sound aus daten.json."""
+        if platform == 'android':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'json/daten.json'
+            
+            #data_dir = MainApp().user_data_dir + "/daten.json"
+        elif platform == 'win':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'json/daten.json'
+            #data_dir = "src/json/daten.json"
+
+        f = open(data_dir)
+        data = json.load(f)
+        self.root.ids.radius.text = data['Radius']
+        self.root.ids.sound_spinner.text = data['Audio Data']
+        f.close()
