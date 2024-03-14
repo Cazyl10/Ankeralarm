@@ -338,25 +338,25 @@ class MainApp(MDApp):
         # self.radius_widget = self.root.ids.radius.text
         # self.spinner_widget = self.root.ids.sound_spinner.text
 
-        if platform == 'android':
-            pfad = Path(__file__).resolve().parent
-            data_dir = pfad / 'src/json/daten.json'
-            #data_dir = MainApp().user_data_dir
-            dictionary = {
-            "Bereich": "Einstellungen",
-            "Radius": self.radius_widget,
-            'Audio Data': self.spinner_widget
-            }
-            with open (data_dir, "w") as file:
-                json.dump(dictionary,file)
-        elif platform == 'win':
-            dictionary = {
-            "Bereich": "Einstellungen",
-            "Radius": self.radius_widget,
-            'Audio Data': self.spinner_widget
-            }
-            with open ("src/json/daten.json", "w") as file:
-                json.dump(dictionary,file)
+        # if platform == 'android':
+        #     pfad = Path(__file__).resolve().parent
+        #     data_dir = pfad / 'src/json/daten.json'
+        #     #data_dir = MainApp().user_data_dir
+        #     dictionary = {
+        #     "Bereich": "Einstellungen",
+        #     "Radius": self.radius_widget,
+        #     'Audio Data': self.spinner_widget
+        #     }
+        #     with open (data_dir, "w") as file:
+        #         json.dump(dictionary,file)
+        # elif platform == 'win':
+        #     dictionary = {
+        #     "Bereich": "Einstellungen",
+        #     "Radius": self.radius_widget,
+        #     'Audio Data': self.spinner_widget
+        #     }
+        #     with open ("src/json/daten.json", "w") as file:
+        #         json.dump(dictionary,file)
 
     def load_settings(self):
         """Lädt den Radius und ausgewählten Sound aus daten.json."""

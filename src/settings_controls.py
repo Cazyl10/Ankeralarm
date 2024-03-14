@@ -1,3 +1,7 @@
+from kivy.utils import platform
+import json
+from pathlib import Path
+
 def increase_radius(self):
         """Erhöht den Radius."""
         #Zugriff auf das Widget mit der id 'radius'
@@ -47,3 +51,23 @@ def write_to_file(self):
         """Schreibt den Radius und ausgewählten Sound in daten.json."""
         self.radius_widget = self.root.ids.radius.text
         self.spinner_widget = self.root.ids.sound_spinner.text
+
+        if platform == 'android':
+            pfad = Path(__file__).resolve().parent
+            data_dir = pfad / 'src/json/daten.json'
+            #data_dir = MainApp().user_data_dir
+            dictionary = {
+            "Bereich": "Einstellungen",
+            "Radius": self.radius_widget,
+            'Audio Data': self.spinner_widget
+            }
+            with open (data_dir, "w") as file:
+                json.dump(dictionary,file)
+        elif platform == 'win':
+            dictionary = {
+            "Bereich": "Einstellungen",
+            "Radius": self.radius_widget,
+            'Audio Data': self.spinner_widget
+            }
+            with open ("src/json/daten.json", "w") as file:
+                json.dump(dictionary,file)
