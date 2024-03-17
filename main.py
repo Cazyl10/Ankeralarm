@@ -93,7 +93,7 @@ class MainApp(MDApp):
     def toggle_program(self):
         """Startet oder stoppt das Programm."""
         if not hasattr(self,'gps_latitude') and not hasattr(self,'gps_longitude'):
-            self.root.ids.launchButton.text = "No GPS Data"
+            self.root.ids.launchButton.text = "Fehler"
             return
         
         if self.is_program_stopped:
