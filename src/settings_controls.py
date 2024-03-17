@@ -1,5 +1,6 @@
 from kivy.utils import platform
 
+# Daniel
 def increase_radius(self):
         """Erhöht den Radius."""
         #Zugriff auf das Widget mit der id 'radius'
@@ -9,6 +10,7 @@ def increase_radius(self):
         #Erhöhen des aktuellen Wertes um 10
         self.radius_widget.text = str(int(self.radius_widget.text) + 10)
 
+# Daniel
 def decrease_radius(self):
         """Reduziert den Radius."""
         # Zugriff auf das Widget mit der id 'radius'
@@ -18,6 +20,7 @@ def decrease_radius(self):
         # Verringere den aktuellen Wert um 10
         self.radius_widget.text = str(int(self.radius_widget.text) - 10)
 
+# Daniel und Florian
 def settings_error(self):
         """Prüfen der Usereingabe im Textfeld bei on_error"""
         self.radius_widget = self.root.ids.radius
@@ -33,6 +36,7 @@ def settings_error(self):
                 self.radius_widget.text = "10"
                 return     
 
+# Daniel und Florian
 def check_input(self):
         """Prüft Usereingabe im Textfeld, sodass keine Null und Werte kleiner 0
         eingegeben werden können"""
