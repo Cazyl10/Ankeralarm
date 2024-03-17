@@ -143,9 +143,11 @@ class MainApp(MDApp):
             lat = 50.0
             lon = 8.0
         elif platform == 'android':
-            lat = self.gps_latitude
-            lon = self.gps_longitude
-
+            try:
+                lat = self.gps_latitude
+                lon = self.gps_longitude
+            except AttributeError:
+                print("GPS-Daten noch nicht erhalten, bitte warten!")
         try:
             self.marker_boat.lat = lat
             self.marker_boat.lon = lon
