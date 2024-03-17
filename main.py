@@ -93,7 +93,11 @@ class MainApp(MDApp):
     def toggle_program(self):
         """Startet oder stoppt das Programm."""
         if self.is_program_stopped:
-            self.draw_circle()
+            try:
+                self.draw_circle()
+            except AttributeError:
+                print("GPS-Daten noch nicht erhalten, bitte nochmal versuchen!")
+                return
             self.root.ids.launchButton.text = "Stop"
             self.is_program_stopped = False
             return
@@ -143,11 +147,8 @@ class MainApp(MDApp):
             lat = 50.0
             lon = 8.0
         elif platform == 'android':
-            try:
-                lat = self.gps_latitude
-                lon = self.gps_longitude
-            except AttributeError:
-                print("GPS-Daten noch nicht erhalten, bitte warten!")
+            lat = self.gps_latitude
+            lon = self.gps_longitude
         try:
             self.marker_boat.lat = lat
             self.marker_boat.lon = lon
