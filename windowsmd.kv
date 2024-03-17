@@ -277,12 +277,40 @@ MDScreenManager:
 
         MDGridLayout:
             cols: 1
-            rows: 2
+            rows: 3
             size_hint_y: 1
 
             MDGridLayout:
+                cols:2
+                rows:1
+                size_hint_y: 0.1
+                size_hint_x: 0.75
+
+                MDIconButton:
+                    icon:"arrow-left"
+                    md_bg_color: "#F0544F"
+                    size_hint:0.1,0.1
+                    on_release:
+                        root.current_heroes = ["hero"]
+                        root.current = "main"
+                        app.back_action()
+                MDLabel:
+                    text: "App-Info"
+                    halign: "center"
+                    valign: "top"
+                    font_size: "32sp"
+                    size_hint: 1, 1
+            
+
+            MDGridLayout:
                 cols: 1
-                rows: 2
+                rows: 1
+                size_hint_y: 0.3
+                padding: [20,20]
+
+            MDGridLayout:
+                cols: 1
+                rows: 3
                 size_hint_y: 0.7
 
                 MDLabel:
@@ -295,28 +323,14 @@ MDScreenManager:
 
                 MDLabel:
                     text_color: 1,1,1,1
-                    font_style: "H5"
+                    font_style: "H4"
                     theme_text_color: "Custom"
                     text: "App-Version: 1.0"
                     valign: 'center'
                     halign: 'center'
 
-            MDGridLayout:
-                cols: 1
-                rows: 1
-                size_hint_y: 0.3
-                padding: [20,20]
+                MDLabel:
+                    text: ""
 
-                MDFlatButton:
-                    text: "Zurück"
-                    md_bg_color: "#D81E5B"
-                    font_size: "32sp"
-                    size_hint_y: 1
-                    size_hint_x: 1
-                    on_release:
-                        root.current_heroes = ["hero"]
-                        root.current = "main"
-                        app.back_action()
-    
 
                     
