@@ -293,10 +293,9 @@ MDScreenManager:
                         root.current = "main"
                         app.back_action()
                 MDLabel:
-                    text: "App-Informationen"
+                    text: "App-Info"
                     halign: "center"
                     valign: "top"
-                    # md_bg_color: "#8470ff"
                     font_size: "32sp"
                     size_hint: 1, 1
             
@@ -309,7 +308,7 @@ MDScreenManager:
 
             MDGridLayout:
                 cols: 1
-                rows: 2
+                rows: 3
                 size_hint_y: 0.7
 
                 MDLabel:
@@ -327,6 +326,9 @@ MDScreenManager:
                     text: "App-Version: 1.0"
                     valign: 'center'
                     halign: 'center'
+
+                MDLabel:
+                    text: ""
 
 
                     
